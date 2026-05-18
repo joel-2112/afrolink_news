@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────
+
+enum Role {
+  author
+  reader
+}
+
+enum Status {
+  Draft
+  Published
+}
+
+// ─── Models ──────────────────────────────────────────────────
+
+model User {
+  id       String  @id @default(uuid())
+  name     String  // letters + spaces — validated at Zod layer
+  email    String  @unique
+  password String  // Argon2 hash — never plain text
+  role     Role
+
+  // relations
+  articles Article[]
+  readLogs ReadLog[]
+
+  @@map("Users")
+}
+
+model Article {
+  id        String    @id @default(uuid())
+  title     String    @db.VarChar(150)   // hard DB cap at 150
+  content   String                        // min 50 — enforced at Zod layer
+  category  String
+  status    Status    @default(Draft)
+  authorId  String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?                     // null = active, timestamp = soft deleted
+
+  // relations
+  author         User             @relation(fields: [authorId], references: [id])
+  readLogs       ReadLog[]
+  dailyAnalytics DailyAnalytics[]
+
+  @@map("Articles")
+}
+
+model ReadLog {
+  id        String   @id @default(uuid())
+  articleId String
+  readerId  String?  // null = guest read (not logged in)
+  readAt    DateTime @default(now())
+
+  // relations
+  article Article @relation(fields: [articleId], references: [id])
+  reader  User?   @relation(fields: [readerId], references: [id])
+
+  @@map("ReadLogs")
+}
+
+model DailyAnalytics {
+  id        String   @id @default(uuid())
+  articleId String
+  viewCount Int
+  date      DateTime @db.Date            // DATEONLY — GMT bucketing in job
+
+  // relations
+  article Article @relation(fields: [articleId], references: [id])
+
+  // unique constraint — exactly as specified
+  @@unique([articleId, date])
+  @@map("DailyAnalytics")
+}
