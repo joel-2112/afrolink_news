@@ -42,8 +42,8 @@ docker run --name newsapi-redis -p 6379:6379 -d redis
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/news-api.git
-cd news-api
+git clone https://github.com/YOUR_USERNAME/afrolink_news.git
+cd afrolink_news
 ```
 
 ### 2. Install dependencies
