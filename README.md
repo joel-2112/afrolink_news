@@ -72,6 +72,15 @@ Server runs on `http://localhost:3000`
 
 ---
 
+## Interactive API Documentation (Swagger)
+
+The project includes full interactive API documentation powered by Swagger UI. Once the development server is running, you can access the following:
+
+* **Swagger UI:** `http://localhost:3000/api-docs` (Allows you to inspect schemas, explore endpoints, and test authorized API requests directly from the browser)
+* **Raw OpenAPI Specification:** `http://localhost:3000/api-docs.json` (Ideal for importing into Postman, Insomnia, or other API clients)
+
+---
+
 ## Environment Variables
 
 | Variable | Description | Example |
