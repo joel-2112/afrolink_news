@@ -8,16 +8,16 @@ export const getAuthorDashboard = async (
   const { page, size } = query;
   const skip = (page - 1) * size;
 
-  // ── Total count for pagination ────────────────────────────────
+  
   const total = await prisma.article.count({
     where: {
       authorId,
-      deletedAt: null,  // exclude soft deleted — spec requirement
+      deletedAt: null,  
     },
   });
 
-  // ── Fetch articles with TotalViews summed from DailyAnalytics ─
-  // spec: each item must include Title, CreatedAt, TotalViews
+  
+  
   const articles = await prisma.$queryRaw<{
     id: string;
     title: string;

@@ -8,8 +8,6 @@ import {
 } from './article.schema';
 import { shouldRecordRead } from '../../utils/readRateLimit';
 
-// ─── Author: Create Article ───────────────────────────────────
-
 export const createArticle = async (
   authorId: string,
   body: CreateArticleInput
@@ -32,14 +30,12 @@ export const createArticle = async (
   return article;
 };
 
-// ─── Author: Update Article ───────────────────────────────────
-
 export const updateArticle = async (
   articleId: string,
   authorId: string,
   body: UpdateArticleInput
 ) => {
-  // find article — global middleware already filters deletedAt: null
+  
   const article = await prisma.article.findFirst({
     where: { id: articleId },
   });
@@ -50,7 +46,7 @@ export const updateArticle = async (
     throw err;
   }
 
-  // ownership check — spec: authors can only edit their own articles
+  
   if (article.authorId !== authorId) {
     const err = new Error('Forbidden') as any;
     err.code = 'FORBIDDEN';
@@ -70,13 +66,11 @@ export const updateArticle = async (
   return updated;
 };
 
-// ─── Author: Soft Delete ──────────────────────────────────────
-
 export const softDeleteArticle = async (
   articleId: string,
   authorId: string
 ) => {
-  // bypass global soft delete filter to find the article by id first
+  
   const article = await prisma.article.findFirst({
     where: { id: articleId },
   });
@@ -87,21 +81,21 @@ export const softDeleteArticle = async (
     throw err;
   }
 
-  // ownership check
+  
   if (article.authorId !== authorId) {
     const err = new Error('Forbidden') as any;
     err.code = 'FORBIDDEN';
     throw err;
   }
 
-  // already soft deleted
+  
   if (article.deletedAt !== null) {
     const err = new Error('Article not found') as any;
     err.code = 'NOT_FOUND';
     throw err;
   }
 
-  // SOFT DELETE — set deletedAt, never remove the row
+  
   await prisma.article.update({
     where: { id: articleId },
     data: { deletedAt: new Date() },
@@ -109,8 +103,6 @@ export const softDeleteArticle = async (
 
   return true;
 };
-
-// ─── Author: My Articles (Story 8) ───────────────────────────
 
 export const getMyArticles = async (
   authorId: string,
@@ -120,12 +112,12 @@ export const getMyArticles = async (
   const { page, size } = query;
   const skip = (page - 1) * size;
 
-  // build where — bypass global middleware by being explicit
-  // we use $queryRaw alternative: override deletedAt filter
+  
+  
   const where: Prisma.ArticleWhereInput = {
     authorId,
-    // if includeDeleted is false/undefined, only show non-deleted
-    // if true, show everything including soft-deleted
+    
+    
     ...(includeDeleted ? {} : { deletedAt: null }),
   };
 
@@ -144,7 +136,7 @@ export const getMyArticles = async (
     prisma.article.count({ where }),
   ]);
 
-  // optionally mark soft-deleted articles
+  
   const formatted = articles.map((a) => ({
     ...a,
     isDeleted: a.deletedAt !== null,
@@ -153,24 +145,22 @@ export const getMyArticles = async (
   return { articles: formatted, total };
 };
 
-// ─── Public: News Feed (Story 4) ─────────────────────────────
-
 export const getPublishedArticles = async (query: ArticleQueryInput) => {
   const { page, size, category, author, q } = query;
   const skip = (page - 1) * size;
 
-  // global middleware handles deletedAt: null automatically
-  // we only need to add our extra filters
+  
+  
   const where: Prisma.ArticleWhereInput = {
     status: 'Published',
 
-    // category: exact match
+    
     ...(category ? { category } : {}),
 
-    // q: keyword search in title
+    
     ...(q ? { title: { contains: q, mode: 'insensitive' } } : {}),
 
-    // author: partial name match on the related User
+    
     ...(author
       ? {
           author: {
@@ -198,15 +188,13 @@ export const getPublishedArticles = async (query: ArticleQueryInput) => {
   return { articles, total };
 };
 
-// ─── Public: Read Single Article (Story 5) ───────────────────
-
 export const getArticleById = async (
   articleId: string,
-  readerId: string | null  // null = guest
+  readerId: string | null  
 ) => {
-  // global middleware handles deletedAt: null
-  // but we need to distinguish "not found" vs "deleted"
-  // so we check raw first
+  
+  
+  
   const raw = await prisma.$queryRaw<{ deletedAt: Date | null }[]>`
     SELECT "deletedAt" FROM "Articles" WHERE id = ${articleId}::uuid LIMIT 1
   `;

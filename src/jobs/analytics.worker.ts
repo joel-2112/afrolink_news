@@ -3,7 +3,7 @@ import redis from '../config/redis';
 import prisma from '../config/database';
 
 interface AnalyticsJobData {
-  triggeredAt?: string; // ISO string — for scheduled jobs
+  triggeredAt?: string; 
 }
 
 const processAnalytics = async (job: Job<AnalyticsJobData>) => {

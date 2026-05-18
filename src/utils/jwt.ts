@@ -4,7 +4,7 @@ const SECRET = process.env.JWT_SECRET!;
 const EXPIRES = process.env.JWT_EXPIRES_IN ?? '24h';
 
 export interface JwtPayload {
-  sub: string;   // userId — exactly as spec requires
+  sub: string;   
   role: string;
 }
 

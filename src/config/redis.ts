@@ -1,16 +1,15 @@
 import Redis from 'ioredis';
 
 const redis = new Redis(process.env.REDIS_URL!, {
-  maxRetriesPerRequest: null, // Required by BullMQ
+  maxRetriesPerRequest: null, 
   retryStrategy(times) {
-    // Slow down reconnection attempts to once every 10 seconds to prevent spamming
+    
     return 10000;
   },
 });
 
 redis.on('connect', () => console.log('Redis connected'));
 
-// Silence spammy AggregateError/ECONNREFUSED stack traces with a clean single-line alert
 let warningLogged = false;
 redis.on('error', (err) => {
   if (err.message?.includes('ECONNREFUSED') || (err as any).code === 'ECONNREFUSED') {

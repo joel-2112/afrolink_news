@@ -12,7 +12,7 @@ export const register = async (
     const input = req.body as RegisterInput;
     const result = await registerUser(input);
 
-    // duplicate email — 409 Conflict with Errors array — story 1 criteria
+    
     if ('conflict' in result) {
       return fail(res, 409, 'Email already exists', [
         'An account with this email already exists',
@@ -21,7 +21,7 @@ export const register = async (
 
     return created(res, 'Account created successfully', result.user);
   } catch (err) {
-    next(err); // passes to global error handler — no stack trace leak
+    next(err); 
   }
 };
 
@@ -34,7 +34,7 @@ export const login = async (
     const input = req.body as LoginInput;
     const result = await loginUser(input);
 
-    // invalid credentials — intentionally vague for security
+    
     if ('invalid' in result) {
       return fail(res, 401, 'Invalid credentials', [
         'Email or password is incorrect',

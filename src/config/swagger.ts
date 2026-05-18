@@ -22,7 +22,7 @@ that processes engagement data into daily reports.
       },
     ],
 
-    // ── Reusable components ───────────────────────────────────
+    
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -34,7 +34,7 @@ that processes engagement data into daily reports.
       },
 
       schemas: {
-        // ── Base response ─────────────────────────────────────
+        
         BaseResponse: {
           type: 'object',
           properties: {
@@ -49,7 +49,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Paginated response ────────────────────────────────
+        
         PaginatedResponse: {
           type: 'object',
           properties: {
@@ -66,7 +66,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── User ─────────────────────────────────────────────
+        
         User: {
           type: 'object',
           properties: {
@@ -84,7 +84,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Register input ────────────────────────────────────
+        
         RegisterInput: {
           type: 'object',
           required: ['name', 'email', 'password', 'role'],
@@ -112,7 +112,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Login input ───────────────────────────────────────
+        
         LoginInput: {
           type: 'object',
           required: ['email', 'password'],
@@ -129,7 +129,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Article ───────────────────────────────────────────
+        
         Article: {
           type: 'object',
           properties: {
@@ -165,7 +165,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Create article input ──────────────────────────────
+        
         CreateArticleInput: {
           type: 'object',
           required: ['title', 'content', 'category'],
@@ -194,7 +194,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Update article input ──────────────────────────────
+        
         UpdateArticleInput: {
           type: 'object',
           description: 'At least one field required',
@@ -218,7 +218,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Dashboard item ────────────────────────────────────
+        
         DashboardItem: {
           type: 'object',
           properties: {
@@ -235,7 +235,7 @@ that processes engagement data into daily reports.
           },
         },
 
-        // ── Error response ────────────────────────────────────
+        
         ErrorResponse: {
           type: 'object',
           properties: {
@@ -252,7 +252,7 @@ that processes engagement data into daily reports.
         },
       },
 
-      // ── Reusable responses ──────────────────────────────────
+      
       responses: {
         Unauthorized: {
           description: 'Missing or invalid JWT token',
@@ -315,7 +315,7 @@ that processes engagement data into daily reports.
         },
       },
 
-      // ── Reusable parameters ─────────────────────────────────
+      
       parameters: {
         pageParam: {
           in: 'query',
@@ -340,7 +340,7 @@ that processes engagement data into daily reports.
     },
   },
 
-  // where to scan for JSDoc comments
+  
   apis: ['./src/modules/**/*.routes.ts'],
 };
 

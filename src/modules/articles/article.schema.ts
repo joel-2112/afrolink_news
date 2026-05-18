@@ -51,8 +51,8 @@ export const updateArticleSchema = z.object({
 
 export const articleQuerySchema = z.object({
   category: z.string().optional(),
-  author: z.string().optional(),    // partial name match
-  q: z.string().optional(),         // keyword in title
+  author: z.string().optional(),    
+  q: z.string().optional(),         
   page: z.coerce.number().int().min(1).default(1),
   size: z.coerce.number().int().min(1).max(100).default(10),
 });

@@ -9,6 +9,6 @@ export const validate = (schema: ZodSchema<any>) =>
       const errors = result.error.issues.map((e) => e.message);
       return fail(res, 400, 'Validation failed', errors);
     }
-    req.body = result.data;  // replace with parsed + typed data
+    req.body = result.data;  
     next();
   };

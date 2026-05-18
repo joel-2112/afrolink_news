@@ -11,7 +11,6 @@ export const analyticsQueue = new Queue('analytics', {
   },
 });
 
-// Silence BullMQ connection error event emitter to prevent terminal spam
 analyticsQueue.on('error', (err) => {
-  // We already log a clean single-line warning in redis.ts, so we can ignore this.
+  
 });

@@ -10,8 +10,6 @@ import {
 import { articleQuerySchema } from './article.schema';
 import { ok, created, paginated, fail } from '../../utils/response';
 
-// ─── POST /articles ───────────────────────────────────────────
-
 export const create = async (
   req: Request,
   res: Response,
@@ -24,8 +22,6 @@ export const create = async (
     next(err);
   }
 };
-
-// ─── PUT /articles/:id ────────────────────────────────────────
 
 export const update = async (
   req: Request,
@@ -41,13 +37,11 @@ export const update = async (
     return ok(res, 'Article updated successfully', article);
   } catch (err: any) {
     if (err.code === 'NOT_FOUND') return fail(res, 404, err.message);
-    // spec: forbidden must return Success: false + "Forbidden" message
+    
     if (err.code === 'FORBIDDEN') return fail(res, 403, 'Forbidden');
     next(err);
   }
 };
-
-// ─── DELETE /articles/:id ─────────────────────────────────────
 
 export const remove = async (
   req: Request,
@@ -64,15 +58,13 @@ export const remove = async (
   }
 };
 
-// ─── GET /articles/me ─────────────────────────────────────────
-
 export const getMe = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    // parse query — includeDeleted optional param
+    
     const parsed = articleQuerySchema.safeParse(req.query);
     if (!parsed.success) {
       return fail(res, 400, 'Invalid query', parsed.error.issues.map(e => e.message));
@@ -97,8 +89,6 @@ export const getMe = async (
     next(err);
   }
 };
-
-// ─── GET /articles ────────────────────────────────────────────
 
 export const getAll = async (
   req: Request,
@@ -126,20 +116,18 @@ export const getAll = async (
   }
 };
 
-// ─── GET /articles/:id ────────────────────────────────────────
-
 export const getOne = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    // req.user is optional here — optionalAuth middleware
+    
     const readerId = req.user?.sub ?? null;
     const article = await getArticleById(req.params.id as string, readerId);
     return ok(res, 'Article retrieved successfully', article);
   } catch (err: any) {
-    // spec exact message must be preserved
+    
     if (err.code === 'DELETED') {
       return fail(res, 410, 'News article no longer available');
     }
